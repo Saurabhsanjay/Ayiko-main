@@ -117,6 +117,7 @@ const CartStep = ({onNext}) => {
               <Text>Tax & Other Fee</Text>
               <Text style={{marginRight: 3}}>₹0</Text>
             </View>
+            <View style={styles.divider} />
             <View style={styles.priceRow}>
               <Text style={styles.orderTotal}>Order Total</Text>
               <Text style={styles.orderTotal}>₹{totalPrice}</Text>
@@ -137,7 +138,7 @@ const CartStep = ({onNext}) => {
         </View>
         <View style={styles.footer}>
           <Text>
-            <Text style={[styles.orderTotal, {alignSelf: 'center'}]}>
+            <Text style={[styles.orderTotals, {alignSelf: 'center'}]}>
               Pay ₹{totalPrice}
             </Text>
           </Text>
@@ -153,6 +154,7 @@ const CartStep = ({onNext}) => {
 const styles = StyleSheet.create({
   stepContent: {
     flex: 1,
+    marginHorizontal: 10,
   },
   cartItem: {
     flexDirection: 'row',
@@ -209,6 +211,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
+  divider: {borderTopWidth: 1, borderTopColor: '#DFDFDF', marginVertical: 10},
 
   quantityContainer: {
     flexDirection: 'column',
@@ -247,11 +250,20 @@ const styles = StyleSheet.create({
   },
   priceDetailText: {
     fontSize: 18,
+    color: '#555555',
+
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  orderTotals: {
+    fontSize: 18,
+    color: '#2E2E2E',
+    fontWeight: 'bold',
+    marginRight: 3,
+  },
   orderTotal: {
     fontSize: 16,
+    color: '#555555',
     fontWeight: 'bold',
     marginRight: 3,
   },

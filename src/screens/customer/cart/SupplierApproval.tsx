@@ -121,6 +121,7 @@ const SupplierApproval = ({onNext, fromOrders, product}) => {
 const styles = StyleSheet.create({
   stepContent: {
     flex: 1,
+    marginHorizontal: 10,
   },
   cartItem: {
     flexDirection: 'row',
@@ -150,6 +151,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#262626',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   image: {
     width: 100,

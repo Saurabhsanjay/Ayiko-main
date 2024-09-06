@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     marginTop: 30,
+    marginHorizontal: 10,
   },
   iconContainer: {
     marginBottom: 20,

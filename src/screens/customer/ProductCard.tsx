@@ -5,26 +5,42 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const ProductCard = ({product}) => {
   const navigation = useNavigation();
+  const dummyImage = 'https://via.placeholder.com/100';
+  console.log(product, 'pd');
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() => navigation.navigate('ProductDetails')}>
+      onPress={() =>
+        navigation.navigate('SupplierProduct', {
+          supplierId: product?.id,
+          supplierName: product?.companyName,
+        })
+      }>
       <View style={styles.card}>
-        <Image source={{uri: product.image}} style={styles.image} />
+        <Image
+          source={{uri: product?.images?.[0]?.imageUrl || dummyImage}}
+          style={styles.image}
+        />
         <View style={styles.info}>
           <Text numberOfLines={2} ellipsizeMode="tail" style={styles.title}>
-            {product.title}
+            {product.companyName || 'Company Name Not Available'}
           </Text>
-          <Text style={styles.company}>{product.company}</Text>
+          <Text style={styles.company}>
+            {product.ownerName || 'Owner Name Not Available'}
+          </Text>
           <View style={styles.ratingContainer}>
-            <Text style={styles.ratingText}>{product.rating.toFixed(1)}</Text>
+            <Text style={styles.ratingText}>
+              {product.rating ? product.rating.toFixed(1) : 'N/A'}
+            </Text>
             <Icon name="star" size={16} color="#4cb4ff" />
           </View>
-          <Text style={styles.price}>${product.price}</Text>
-          <TouchableOpacity style={styles.button} onPress={() => {}}>
-            <Icon name="cart" size={16} color="white" />
-            <Text style={styles.buttonText}>Add to Cart</Text>
-          </TouchableOpacity>
+          <Text style={styles.price}>
+            {product.city || 'City Not Available'}
+          </Text>
+          {/* <TouchableOpacity style={styles.button} onPress={() => {}}>
+            <Icon name="call" size={16} color="white" />
+            <Text style={styles.buttonText}>Contact</Text>
+          </TouchableOpacity> */}
         </View>
       </View>
     </TouchableOpacity>
@@ -45,24 +61,9 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   image: {
-    width: 100,
-    height: '100%',
+    width: 120,
+    height: 150,
     borderRadius: 5,
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    // backgroundColor: '#fff',
-    borderWidth: 1,
-
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    marginTop: 10,
-    marginBottom: 10,
-    marginHorizontal: 10,
-  },
-  icon: {
-    marginRight: 10,
   },
   info: {
     flex: 1,

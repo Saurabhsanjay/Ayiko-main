@@ -47,7 +47,12 @@ const ProductCard = ({item, navigation, showDifferentSupplierPopup}) => {
       console.log('Item already in cart');
     }
   };
-
+  function truncate(text, maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return text.slice(0, maxLength) + '...';
+  }
   return (
     <TouchableOpacity
       onPress={() =>
@@ -57,12 +62,16 @@ const ProductCard = ({item, navigation, showDifferentSupplierPopup}) => {
       }
       style={styles.productCard}>
       <Image
-        source={{uri: item.image || 'https://via.placeholder.com/400x200'}}
+        source={{
+          uri:
+            item?.imageUrl?.[0]?.imageUrl ||
+            'https://via.placeholder.com/400x200',
+        }}
         style={styles.productImage}
       />
       <View style={styles.productInfo}>
         <View style={styles.titleRow}>
-          <Text style={styles.productTitle}>{item.name}</Text>
+          <Text style={styles.productTitle}>{truncate(item?.name, 9)}</Text>
           {existingItem ? (
             <TouchableOpacity
               style={styles.removebutton}
@@ -115,7 +124,7 @@ const SupplierProducts = ({navigation, route}: any) => {
     ['supplierproducts', supplierId],
     `/suppliers/${supplierId}/products`,
   );
-
+  console.log(productsList, 'pk');
   const {data: supplierDetails} = useFetch<SupplierDetails[]>(
     ['supplier-details', supplierId],
     `/suppliers/${supplierId}`,
@@ -418,6 +427,7 @@ const styles = StyleSheet.create({
   productImage: {
     width: '100%',
     height: 150,
+    resizeMode: 'cover',
   },
   productInfo: {
     padding: 10,

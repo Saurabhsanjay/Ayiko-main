@@ -27,6 +27,8 @@ import {TProductDetails} from 'types/product';
 import CartModal from './cart/ErrorModal';
 import {useToast} from 'contexts/ToastContext';
 import CustomAlert from './CustomAlert';
+import {catalogList} from 'store/slices/catalogSlice';
+import Catalog from './cart/Catlog';
 
 const {width} = Dimensions.get('window');
 const height = 300;
@@ -43,6 +45,7 @@ const ProductDetails = ({navigation, route}: any) => {
   const differentSupplierError = useAppSelector(
     state => state.cart.differentSupplierError,
   );
+  const dispatch = useAppDispatch();
   console.log(error, 'tc');
   console.log(cartItems, 'citems');
   const [active, setActive] = useState(0);
@@ -57,17 +60,20 @@ const ProductDetails = ({navigation, route}: any) => {
     `/products/${productId}`,
   );
   console.log(singleProduct, 'spppp');
-  const images = [
-    'https://via.placeholder.com/400x300/333333/FFFFFF?text=Image+1',
-    'https://via.placeholder.com/400x300/666666/FFFFFF?text=Image+2',
-    'https://via.placeholder.com/400x300/999999/FFFFFF?text=Image+3',
-  ];
+
+  const catalogData = useAppSelector(state => state.catalog.data);
+
+  useEffect(() => {
+    if (singleProduct?.supplierId) {
+      dispatch(catalogList(singleProduct.supplierId));
+    }
+  }, [singleProduct?.supplierId, dispatch]);
 
   useEffect(() => {
     // Check if singleProduct and imageUrlList are defined
-    if (singleProduct?.imageUrlList?.length) {
+    if (singleProduct?.imageUrl?.length) {
       const interval = setInterval(() => {
-        if (active === singleProduct.imageUrlList.length - 1) {
+        if (active === singleProduct.imageUrl.length - 1) {
           scrollViewRef.current.scrollTo({x: 0, animated: true});
         } else {
           scrollViewRef.current.scrollTo({
@@ -141,6 +147,29 @@ const ProductDetails = ({navigation, route}: any) => {
     }
   };
 
+  const handleBuyNow = () => {
+    if (!existingItem) {
+      dispatch(addItemAsync({...singleProduct, cartQuantity: 1} as CartItem))
+        .unwrap()
+        .then(() => {
+          showToast('Item added to cart');
+          navigation.navigate('Stepper'); // Navigate to the cart or stepper screen
+        })
+        .catch(error => {
+          if (error.type === 'DIFFERENT_SUPPLIER') {
+            showDifferentSupplierPopup(error.message);
+          } else {
+            console.error(error, 'Error adding item to cart');
+            setModalVisible(true);
+          }
+        });
+    } else {
+      console.log('Item already in cart');
+      navigation.navigate('Stepper'); // Navigate to the cart or stepper screen
+      // item is already in the cart
+    }
+  };
+
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
@@ -172,8 +201,6 @@ const ProductDetails = ({navigation, route}: any) => {
     dispatch(removeItem(productId));
   };
 
-  const dispatch = useAppDispatch();
-
   const handleConfirm = () => {
     dispatch(clearCart());
     setModalVisible(false);
@@ -201,10 +228,10 @@ const ProductDetails = ({navigation, route}: any) => {
             onScroll={change}
             ref={scrollViewRef}
             style={styles.carousel}>
-            {singleProduct?.imageUrlList.map((image, index) => (
+            {singleProduct?.imageUrl?.map((image, index) => (
               <Image
                 key={index}
-                source={{uri: image}}
+                source={{uri: image?.imageUrl}}
                 style={styles.carouselImage}
               />
             ))}
@@ -264,9 +291,13 @@ const ProductDetails = ({navigation, route}: any) => {
         <Text style={styles.sectionHeading}>Product Details</Text>
 
         <View style={styles.detailsContainer}>
-          <Text style={styles.detailItem}>Name: Product Name</Text>
+          <Text style={styles.detailItem}>Name: {singleProduct?.name}</Text>
           <Text style={styles.detailItem}>Material: Product Material</Text>
           <Text style={styles.detailItem}>Pattern: Product Pattern</Text>
+        </View>
+
+        <View>
+          <Catalog catlogData={catalogData} />
         </View>
       </ScrollView>
 
@@ -291,7 +322,9 @@ const ProductDetails = ({navigation, route}: any) => {
               style={[styles.button, styles.addToCartButton]}>
               <Text style={styles.buttonText}>Add to Cart</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.buyNowButton]}>
+            <TouchableOpacity
+              onPress={handleBuyNow}
+              style={[styles.button, styles.buyNowButton]}>
               <Text style={styles.buttonText}>Buy Now</Text>
             </TouchableOpacity>
           </>
@@ -421,15 +454,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   sectionHeading: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     padding: 10,
   },
   detailsContainer: {
     padding: 10,
+    paddingTop: 0,
   },
   detailItem: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 5,
   },
   buttonContainer: {

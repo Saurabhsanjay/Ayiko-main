@@ -23,7 +23,7 @@ import {
   UserProfileScreen,
 } from 'screens';
 import {
-  SVGCart,
+  SVGCategory,
   SVGCatalog,
   SVGDeliveriesIcon,
   SVGDriver,
@@ -75,27 +75,13 @@ const BottomNavigation = () => {
           screenOptions={({navigation}) => ({
             tabBarLabelStyle: styles.tabBarLabelStyle,
 
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate('UserProfileScreen')}>
-                {/* <SVGProfilePic /> */}
-                <Image
-                  source={require('../assets/image/profilePic.png')}
-                  style={{
-                    resizeMode: 'cover',
-                    width: 50,
-                    height: 50,
-                  }}
-                />
-              </TouchableOpacity>
-            ),
-            headerTintColor: colors.primary,
+            headerTintColor: 'colors.primary',
             headerShadowVisible: false,
             tabBarShowLabel: true,
             headerTitleAlign: 'center',
             tabBarLabelPosition: 'below-icon',
             headerStyle: {
-              backgroundColor: colors.primary,
+              backgroundColor: 'white',
             },
             headerTitleStyle: styles.headerTitleStyle,
             headerLeftContainerStyle: {
@@ -146,17 +132,6 @@ const BottomNavigation = () => {
                 })}
               />
               <BottomStack.Screen
-                name="Driver"
-                component={SupplierDriverNavigation}
-                options={({navigation, route}) => ({
-                  title: 'Manage Drivers',
-                  tabBarLabel: 'Driver',
-                  tabBarIcon: ({color}) => (
-                    <SVGDriver stroke={color} strokeWidth="1" width={39} />
-                  ),
-                })}
-              />
-              <BottomStack.Screen
                 name="Catalog"
                 component={CatalogNavigation}
                 options={{
@@ -167,6 +142,17 @@ const BottomNavigation = () => {
                     <SVGCatalog stroke={color} strokeWidth="1" width={39} />
                   ),
                 }}
+              />
+              <BottomStack.Screen
+                name="Driver"
+                component={SupplierDriverNavigation}
+                options={({navigation, route}) => ({
+                  title: 'Manage Drivers',
+                  tabBarLabel: 'Driver',
+                  tabBarIcon: ({color}) => (
+                    <SVGDriver stroke={color} strokeWidth="1" width={39} />
+                  ),
+                })}
               />
               <BottomStack.Screen
                 name="Account"
@@ -269,11 +255,7 @@ const BottomNavigation = () => {
                         onPress={() => {
                           navigation.navigate('Home');
                         }}>
-                        <Feather
-                          name="arrow-left"
-                          size={20}
-                          color={colors.white}
-                        />
+                        <Feather name="arrow-left" size={20} color={'black'} />
                       </TouchableOpacity>
                     );
                   },
@@ -293,7 +275,7 @@ const BottomNavigation = () => {
                   headerShown: true,
                   title: 'Categories',
                   tabBarIcon: ({color}) => (
-                    <SVGCart fill={color} strokeWidth="2" width={39} />
+                    <SVGCategory fill={color} strokeWidth="2" width={39} />
                   ),
                 })}
               />
@@ -310,16 +292,12 @@ const BottomNavigation = () => {
                         onPress={() => {
                           navigation.navigate('Home');
                         }}>
-                        <Feather
-                          name="arrow-left"
-                          size={25}
-                          color={colors.white}
-                        />
+                        <Feather name="arrow-left" size={25} color={'black'} />
                       </TouchableOpacity>
                     );
                   },
-                  headerTitle: 'My Orders',
-                  title: 'My Orders',
+                  headerTitle: 'Your Orders',
+                  title: 'Your Orders',
                   tabBarIcon: ({color}) => (
                     <SVGOrders
                       fill={colors?.primary}
@@ -333,6 +311,17 @@ const BottomNavigation = () => {
                 name="Account"
                 component={UserProfileScreen}
                 options={({navigation, route}) => ({
+                  headerLeft: () => {
+                    return (
+                      <TouchableOpacity
+                        // style={{width: '35%'}}
+                        onPress={() => {
+                          navigation.navigate('Home');
+                        }}>
+                        <Feather name="arrow-left" size={25} color={'black'} />
+                      </TouchableOpacity>
+                    );
+                  },
                   title: 'Account',
                   tabBarIcon: ({color}) => (
                     <SVGUserIcon
@@ -374,8 +363,10 @@ const Styles = ({colors, fonts, insets}: any) =>
       fontSize: 14,
     },
     headerTitleStyle: {
-      ...fonts.title,
-      color: colors.white,
+      // ...fonts.title,
+      fontSize: 17,
+      fontWeight: '600',
+      color: 'black',
     },
     cart: {
       backgroundColor: colors.primary,

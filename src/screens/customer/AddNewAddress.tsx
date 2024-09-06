@@ -98,15 +98,15 @@ const Chip = ({label, selected, onPress}) => {
 };
 
 const AddNewAddress = ({setIsNewAddress, refetch}) => {
-  const [fullName, setFullName] = useState('saurabh');
-  const [phoneNumber, setPhoneNumber] = useState('8668727151');
-  const [houseBuilding, setHouseBuilding] = useState('abcd');
-  const [roadArea, setRoadArea] = useState('abcd');
-  const [pinCode, setPinCode] = useState('444001');
-  const [city, setCity] = useState('akola');
-  const [state, setState] = useState('delhi');
-  const [landmark, setLandmark] = useState('akl;aa');
-  const [selectedChip, setSelectedChip] = useState('Home');
+  const [fullName, setFullName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [houseBuilding, setHouseBuilding] = useState('');
+  const [roadArea, setRoadArea] = useState('');
+  const [pinCode, setPinCode] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [landmark, setLandmark] = useState('');
+  const [selectedChip, setSelectedChip] = useState('');
   const {showToast} = useToast();
   const handleChipSelection = (chip: React.SetStateAction<string>) => {
     setSelectedChip(chip);

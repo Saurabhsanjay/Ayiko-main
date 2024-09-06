@@ -40,12 +40,18 @@ import {
 
 import {ImageComp, Loader} from 'components';
 import {getCustomer} from 'store/slices/authSlice';
-import Permissions, {PERMISSIONS, check} from 'react-native-permissions';
+import Permissions, {
+  PERMISSIONS,
+  RESULTS,
+  check,
+  request,
+} from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
 import helpers from 'utils/helpers';
 import LocationHeader from 'components/LocationHeader';
 import useFetch from 'hooks/useFetch';
 import {Supplier} from 'types/supplier';
+import {categoryData} from './customer/Categories';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -54,7 +60,9 @@ const HomeScreen = ({navigation, route}: {navigation: any; route: any}) => {
   const {colors, fonts} = useTheme();
   const styles = Styles({colors, fonts});
   const [location, setLocation] = useState<any>(null);
-
+  console.log(location, 'lc');
+  const API_KEY = 'AIzaSyBIHlJ75gl-Pl8S4o-jmjdZkrIUp3mvMx4';
+  const [lodingLocation, setIsLocationLoading] = useState(false);
   const [address, setAddress] = useState(
     'Behind ganesh temple, New Sangvi, Pune, 411029',
   );
@@ -122,36 +130,82 @@ const HomeScreen = ({navigation, route}: {navigation: any; route: any}) => {
     groupedOffers.push(offers.slice(i, i + 3));
   }
 
-  // const getLocation = async () => {
-  //   if (Platform.ios === 'ios') {
-  //     const permissionStatus = await check(
-  //       PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
-  //     );
-  //     const coords =
-  //       permissionStatus == 'granted'
-  //         ? helpers.getLocation()
-  //         : await helpers.requestLocationPermission();
+  const requestLocationPermission = async () => {
+    if (Platform.OS === 'ios') {
+      const result = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      if (result === RESULTS.DENIED) {
+        const permissionResult = await request(
+          PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+        );
+        return permissionResult === RESULTS.GRANTED;
+      }
+      return result === RESULTS.GRANTED;
+    } else {
+      const result = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      if (result === RESULTS.DENIED) {
+        const permissionResult = await request(
+          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        );
+        return permissionResult === RESULTS.GRANTED;
+      }
+      return result === RESULTS.GRANTED;
+    }
+  };
+  const fetchAddress = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`,
+      );
+      const data = await response.json();
+      if (data.results && data.results.length > 0) {
+        console.log(data.results,"ds");
+        setAddress(data.results[0].formatted_address);
+      } else {
+        setAddress('Address not found');
+      }
+    } catch (error) {
+      console.error(error);
+      setAddress('Failed to fetch address');
+    }
+  };
+  const getUserLocation = async () => {
+    setIsLocationLoading(true);
+    const hasPermission = await requestLocationPermission();
+    if (hasPermission) {
+      Geolocation.getCurrentPosition(
+        position => {
+          const {latitude, longitude} = position.coords;
+          setLocation({latitude, longitude});
+          fetchAddress(latitude, longitude); // Fetch address here
+          setIsLocationLoading(false);
 
-  //     console.log('requestLocationPermissioncoords', coords);
-  //     setLocation(coords);
-  //   } else {
-  //     const permissionStatus = await check(
-  //       PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
-  //     );
-  //     const coords =
-  //       permissionStatus == 'granted'
-  //         ? helpers.getLocation()
-  //         : await helpers.requestLocationPermission();
-
-  //     console.log('requestLocationPermissioncoords', coords);
-  //     setLocation(coords);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   getLocation();
-  // }, []);
+          // Then request a more accurate position
+          Geolocation.getCurrentPosition(
+            accuratePosition => {
+              const {latitude, longitude} = accuratePosition.coords;
+              setLocation({latitude, longitude});
+              fetchAddress(latitude, longitude); // Fetch address again for more accuracy
+            },
+            error => console.log(error),
+            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+          );
+        },
+        error => {
+          console.log(error);
+          Alert.alert('Error', 'Unable to get location');
+          setIsLocationLoading(false);
+        },
+        {enableHighAccuracy: false, timeout: 5000, maximumAge: 60000},
+      );
+    } else {
+      Alert.alert('Permission Denied');
+      setIsLocationLoading(false);
+    }
+  };
+  useEffect(() => {
+    getUserLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //  Api requests
   const {
@@ -172,47 +226,18 @@ const HomeScreen = ({navigation, route}: {navigation: any; route: any}) => {
     return (
       <>
         <View style={styles.headerContainer}>
-          <View style={styles.header}>
-            {/* <View style={styles.searchWrapper}>
-              <SVGSearch />
-              <TextInput
-                placeholder="Search for item or supplier"
-                style={styles.searchInput}
-              />
-            </View>
-            <SVGNotification fill={colors.white} strokeWidth="2" /> */}
-          </View>
+          <Icon name="map-pin" size={18} color="black" />
+          <Text style={styles.hederText}>
+            {address ? address : 'Add Delivery Location'}
+          </Text>
           {/* <LocationHeader navigation={navigation} show /> */}
         </View>
       </>
     );
   };
 
-  const data = [
-    {
-      id: '1',
-      image: 'https://via.placeholder.com/150',
-      category: 'Dairy Products',
-    },
-    {
-      id: '2',
-      image: 'https://via.placeholder.com/150',
-      category: 'Category 3 & Category 4',
-    },
-    {
-      id: '3',
-      image: 'https://via.placeholder.com/150',
-      category: 'Category 5 & Category 6',
-    },
-    {
-      id: '4',
-      image: 'https://via.placeholder.com/150',
-      category: 'Category 7 & Category 8',
-    },
-  ];
-
   const renderCategories = ({item}: any) => {
-    const parts = item.category.split(' & ');
+    const parts = item?.name?.split(' & ');
 
     return (
       <View style={styles.item}>
@@ -248,7 +273,8 @@ const HomeScreen = ({navigation, route}: {navigation: any; route: any}) => {
           }}
           source={{
             uri:
-              item?.images?.[0]?.imageUrl || 'https://via.placeholder.com/150',
+              item?.images?.[0]?.imageUrl ||
+              'https://via.placeholder.com/150?text=',
           }}
         />
         <Text
@@ -321,7 +347,7 @@ const HomeScreen = ({navigation, route}: {navigation: any; route: any}) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <Loader isLoading={isLoading} />
-      {renderHeader()}
+
       <TouchableOpacity
         onPress={() => navigation.navigate('Search')}
         style={styles.searchContainer}>
@@ -336,11 +362,12 @@ const HomeScreen = ({navigation, route}: {navigation: any; route: any}) => {
           // value={searchText}
         />
       </TouchableOpacity>
+      {renderHeader()}
       <ScrollView style={styles.container}>
         {/* Categories list Begin */}
         <FlatList
           showsHorizontalScrollIndicator={false}
-          data={data}
+          data={categoryData}
           renderItem={renderCategories}
           keyExtractor={item => item.id}
           horizontal={true}
@@ -348,11 +375,11 @@ const HomeScreen = ({navigation, route}: {navigation: any; route: any}) => {
         {/* Categories list end */}
 
         {/* Nearby Sellers Begin*/}
-        <TouchableOpacity onPress={() => navigation.navigate('Driver')}>
+        <View>
           <View style={styles.nearbySeller}>
-            <Text style={styles.nearBytext}>Nearby Seller</Text>
+            <Text style={styles.nearBytext}>Nearby Suppliers</Text>
           </View>
-        </TouchableOpacity>
+        </View>
         <FlatList
           showsHorizontalScrollIndicator={false}
           data={supplierList}
@@ -417,22 +444,35 @@ const Styles = ({colors, fonts}: any) =>
       color: '#000',
     },
     headerContainer: {
-      backgroundColor: colors.primary,
+      height: 35,
+      borderTopWidth: 1,
+      borderTopColor: '#D2D2D2',
+      paddingHorizontal: 15,
+      gap: 10,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      backgroundColor: '#e9f6ff',
+      marginBottom: 5,
     },
+    hederText: {color: 'black', fontSize: 14, fontWeight: '600'},
     nearbySeller: {
-      marginTop: 15,
+      marginTop: 5,
       marginBottom: 25,
       flex: 1,
       padding: 7,
-      backgroundColor: colors.primary,
+      backgroundColor: '#C2E6FF',
       borderRadius: 20,
       textAlign: 'center',
     },
     nearBytext: {
-      ...fonts.bold,
-      ...fonts.subHeading,
+      // ...fonts.bold,
+      // ...fonts.subHeading,
       alignSelf: 'center',
-      color: 'white',
+      color: '#044171',
+      fontSize: 16,
+      fontWeight: '600',
     },
     sellerImage: {
       width: 200,

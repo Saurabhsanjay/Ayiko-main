@@ -1,5 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  BackHandler,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather'; // Import the icon library
 import CartStep from './cart/Cart';
@@ -7,33 +13,62 @@ import AddressScreen from './cart/Address';
 import SupplierApproval from './cart/SupplierApproval';
 import PaymentConfirmation from './cart/Payment';
 import PrivateScreen from 'contexts/AuthScreen';
-import {useAppSelector} from 'hooks';
+import {useAppDispatch, useAppSelector} from 'hooks';
+import {clearCart} from 'store/slices/CartSlice';
+import {useFocusEffect} from '@react-navigation/native';
 
 const steps = ['CART', 'ADDRESS', 'APPROVAL', 'PAYMENT'];
-const Header = ({currentStep, onBack, navigation, fromOrders}) => (
-  <View style={styles.headerContainer}>
-    <TouchableOpacity
-      onPress={() => {
-        if (fromOrders) {
-          navigation.navigate('MyOrders'); // Navigate to MyOrders page
-        } else if (currentStep === 0) {
-          navigation.goBack();
-        } else {
-          onBack();
-        }
-      }}>
-      <Icon name="arrow-left" size={24} color="black" />
-    </TouchableOpacity>
-    <Text style={styles.headerTitle}>{steps[currentStep]}</Text>
-    <View style={{width: 24}} />
-  </View>
-);
+const stepsHeading = ['CART', 'DELIVERY ADDRESS', 'APPROVAL', 'PAYMENT'];
+const Header = ({currentStep, onBack, navigation, fromOrders, dispatch}) => {
+  const handleBackPress = useCallback(() => {
+    if (fromOrders) {
+      navigation.navigate('MyOrders');
+    } else if (currentStep === 0) {
+      navigation.navigate('Home');
+    } else {
+      navigation.navigate('Home');
+      dispatch(clearCart());
+    }
+    return true; // Prevent default back button behavior
+  }, [fromOrders, currentStep, navigation, dispatch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        handleBackPress,
+      );
+
+      return () => backHandler.remove();
+    }, [handleBackPress]),
+  );
+
+  return (
+    <View style={styles.headerContainer}>
+      <TouchableOpacity
+        onPress={() => {
+          if (fromOrders) {
+            navigation.navigate('MyOrders'); // Navigate to MyOrders page
+          } else if (currentStep === 0) {
+            navigation.navigate('Home');
+          } else {
+            navigation.navigate('Home');
+            dispatch(clearCart());
+          }
+        }}>
+        <Icon name="arrow-left" size={24} color="black" />
+      </TouchableOpacity>
+      <Text style={styles.headerTitle}>{stepsHeading[currentStep]}</Text>
+      <View style={{width: 24}} />
+    </View>
+  );
+};
 
 const StepperScreen = ({navigation, route}) => {
   const [currentStep, setCurrentStep] = useState(0);
-
+  const dispatch = useAppDispatch();
   const {product, fromOrders} = route.params || {};
-
+  const totalQuantity = useAppSelector(state => state.cart.items);
   console.log('Product', product, fromOrders);
 
   const handleNext = () => {
@@ -62,53 +97,56 @@ const StepperScreen = ({navigation, route}) => {
     }
   }, [fromOrders, product?.paymentDetails?.customerStatus]);
 
-  if (!customerData?.id) {
+  if (!customerData?.id && currentStep > 0) {
     return <PrivateScreen />;
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <Header
+        dispatch={dispatch}
         currentStep={currentStep}
         onBack={handleBack}
         navigation={navigation}
         fromOrders={fromOrders} // Pass fromOrders to Header
       />
-      <View style={styles.stepperContainer}>
-        {steps.map((step, index) => (
-          <React.Fragment key={index}>
-            <View style={styles.stepContainer}>
-              <View
-                style={[
-                  styles.circle,
-                  index === currentStep && styles.activeCircle,
-                  index < currentStep && styles.completedCircle,
-                ]}>
-                {index < currentStep ? (
-                  <Icon name="check" size={16} color="#fff" />
-                ) : (
-                  <Text
-                    style={[
-                      styles.stepNumber,
-                      index === currentStep && styles.activeStepNumber,
-                    ]}>
-                    {index + 1}
-                  </Text>
-                )}
+      {totalQuantity?.length > 0 && (
+        <View style={styles.stepperContainer}>
+          {steps.map((step, index) => (
+            <React.Fragment key={index}>
+              <View style={styles.stepContainer}>
+                <View
+                  style={[
+                    styles.circle,
+                    index === currentStep && styles.activeCircle,
+                    index < currentStep && styles.completedCircle,
+                  ]}>
+                  {index < currentStep ? (
+                    <Icon name="check" size={16} color="#fff" />
+                  ) : (
+                    <Text
+                      style={[
+                        styles.stepNumber,
+                        index === currentStep && styles.activeStepNumber,
+                      ]}>
+                      {index + 1}
+                    </Text>
+                  )}
+                </View>
+                <Text style={styles.stepName}>{step}</Text>
               </View>
-              <Text style={styles.stepName}>{step}</Text>
-            </View>
-            {index < steps.length - 1 && (
-              <View
-                style={[
-                  styles.line,
-                  index < currentStep && styles.completedLine,
-                ]}
-              />
-            )}
-          </React.Fragment>
-        ))}
-      </View>
+              {index < steps.length - 1 && (
+                <View
+                  style={[
+                    styles.line,
+                    index < currentStep && styles.completedLine,
+                  ]}
+                />
+              )}
+            </React.Fragment>
+          ))}
+        </View>
+      )}
 
       {currentStep === 0 && <CartStep onNext={handleNext} />}
       {currentStep === 1 && (
@@ -137,13 +175,14 @@ const StepperScreen = ({navigation, route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
   },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
+    paddingLeft: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
@@ -157,6 +196,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 20,
+    paddingHorizontal: 20,
   },
   stepContainer: {
     alignItems: 'center',

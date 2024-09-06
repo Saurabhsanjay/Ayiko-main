@@ -158,23 +158,8 @@ const BottomNavigation = () => {
             name="Categories"
             component={Categories}
             options={({navigation, route}) => ({
-              headerLeft: () => {
-                return (
-                  <TouchableOpacity
-                    // style={{width: '35%'}}
-                    onPress={() => {
-                      navigation.navigate('Home');
-                    }}>
-                    <Feather name="arrow-left" size={25} color={colors.white} />
-                  </TouchableOpacity>
-                );
-              },
               // eslint-disable-next-line react/no-unstable-nested-components
-              headerTitle: () => (
-                <View>
-                  <Text style={[styles.headerTitleStyle]}>Categories</Text>
-                </View>
-              ),
+
               headerRight: () => {
                 return (
                   <>

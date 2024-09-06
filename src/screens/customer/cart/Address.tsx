@@ -62,6 +62,7 @@ const AddressScreen = ({onNext}) => {
       },
     };
     mutate(cartData);
+    
   };
 
   const addresses = customer?.deliveryAddresses || [];
@@ -79,6 +80,8 @@ const AddressScreen = ({onNext}) => {
       setSelectedAddress(addresses[0].id);
     }
   }, [addresses, selectedAddress]);
+
+
 
   return (
     <View style={styles.container}>
@@ -137,6 +140,12 @@ const AddressScreen = ({onNext}) => {
           <Text style={styles.sendRequestButtonText}>Send Request</Text>
         </TouchableOpacity>
       )}
+      {!isNewAddress && (
+        <Text
+          style={{alignSelf: 'center', marginVertical: 5, marginBottom: 10}}>
+          Send Request to the supplier to check the availability
+        </Text>
+      )}
     </View>
   );
 };
@@ -148,6 +157,7 @@ const styles = StyleSheet.create({
   addNewAddressContainer: {
     flex: 1,
     position: 'relative',
+    paddingHorizontal: 10,
   },
   closeIcon: {
     position: 'absolute',
@@ -162,15 +172,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    padding: 12,
+    // borderWidth: 1,
+    // borderColor: '#ccc',
     borderRadius: 5,
     marginBottom: 8,
   },
   selectedAddress: {
     borderColor: '#2196f3',
-    backgroundColor: '#f0f8ff',
+    backgroundColor: '#EAF6FF',
   },
   addressName: {
     fontWeight: 'bold',
@@ -188,14 +198,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 5,
     marginTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#D2D2D2',
   },
   addButtonText: {
     color: 'black',
     fontWeight: 'bold',
     fontSize: 14,
+    marginVertical: 5,
   },
   sendRequestButton: {
     padding: 10,
+    marginHorizontal: 20,
     marginTop: 30,
     borderRadius: 10,
     backgroundColor: '#2196F3',
@@ -204,6 +218,7 @@ const styles = StyleSheet.create({
   },
   sendRequestButtonText: {
     color: 'white',
+    fontWeight: 'bold',
   },
 });
 

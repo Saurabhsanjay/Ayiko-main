@@ -167,12 +167,12 @@ const UserProfileScreen = ({navigation}: any) => {
 
   const customerRows = [
     // {name: 'Membership', icon: <SVGMembership />, navigation: ''},
-    {name: 'My Orders', icon: <SVGOrderIcon />, navigation: 'OrderList'},
+    {name: 'My Orders', icon: <SVGOrderIcon />, navigation: 'MyOrders'},
     // {name: 'Payment Method', icon: <SVGPaymentMethod />, navigation: ''},
 
     // {name: 'Language', icon: <SVGLanguage />, navigation: ''},
     {
-      name: 'Adresses',
+      name: 'Address',
       icon: <SVGDeliveriesIcon />,
       navigation: 'AddressScreen',
     },

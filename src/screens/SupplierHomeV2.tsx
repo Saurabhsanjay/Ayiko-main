@@ -78,7 +78,7 @@ const SupplierHomeV2 = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <View style={styles.searchContainer}>
+        {/* <View style={styles.searchContainer}>
           <Icon
             name="search"
             size={24}
@@ -90,8 +90,8 @@ const SupplierHomeV2 = ({navigation}) => {
             placeholder="Search..."
             placeholderTextColor="#B1DEFF"
           />
-        </View>
-        <View style={styles.divider} />
+        </View> */}
+        {/* <View style={styles.divider} /> */}
 
         {catalogData && catalogData?.length <= 0 && (
           <Pressable
@@ -112,7 +112,7 @@ const SupplierHomeV2 = ({navigation}) => {
             <Text style={styles.categoriesTitle}>Catalog</Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('CatalogScreen')}>
-              <Text style={styles.showAllText}>Show All</Text>
+              <Text style={styles.showAllText}>View All</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -187,8 +187,7 @@ export default SupplierHomeV2;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'red',
-    paddingVertical: 0,
+    backgroundColor: '#ffffff',
   },
   divider: {
     height: 1, // Thickness of the divider
@@ -275,15 +274,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // padding: 10,
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    // paddingVertical: 10,
   },
   categoriesTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#000000',
   },
   showAllText: {
-    color: '#007AFF',
-    fontSize: 14,
+    fontSize: 13,
   },
   categoryRow: {
     justifyContent: 'center',

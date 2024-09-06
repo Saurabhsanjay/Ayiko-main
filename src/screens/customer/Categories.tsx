@@ -11,36 +11,95 @@ import {
 } from 'react-native';
 
 const {width} = Dimensions.get('window');
-const columnWidth = (width - 40) / 3;
+const numColumns = 3;
+const itemSpacing = 10;
+const columnWidth = (width - itemSpacing * (numColumns - 1)) / numColumns;
 
-const categoryData = [
-  {id: '1', name: 'Water & Drinks', image: 'https://via.placeholder.com/60'},
-  {id: '2', name: 'Shopping', image: 'https://via.placeholder.com/60'},
-  {id: '3', name: 'Travel', image: 'https://via.placeholder.com/60'},
-  {id: '4', name: 'Entertainment', image: 'https://via.placeholder.com/60'},
-  {id: '5', name: 'Education', image: 'https://via.placeholder.com/60'},
-  {id: '6', name: 'Health', image: 'https://via.placeholder.com/60'},
-  {id: '7', name: 'Technology', image: 'https://via.placeholder.com/60'},
-  {id: '8', name: 'Sports', image: 'https://via.placeholder.com/60'},
-  {id: '9', name: 'Finance', image: 'https://via.placeholder.com/60'},
-  {id: '1', name: 'Water & Drinks', image: 'https://via.placeholder.com/60'},
-  {id: '2', name: 'Shopping', image: 'https://via.placeholder.com/60'},
-  {id: '3', name: 'Travel', image: 'https://via.placeholder.com/60'},
-  {id: '4', name: 'Entertainment', image: 'https://via.placeholder.com/60'},
-  {id: '5', name: 'Education', image: 'https://via.placeholder.com/60'},
-  {id: '6', name: 'Health', image: 'https://via.placeholder.com/60'},
-  {id: '7', name: 'Technology', image: 'https://via.placeholder.com/60'},
-  {id: '8', name: 'Sports', image: 'https://via.placeholder.com/60'},
-  {id: '9', name: 'Finance', image: 'https://via.placeholder.com/60'},
-  {id: '1', name: 'Water & Drinks', image: 'https://via.placeholder.com/60'},
-  {id: '2', name: 'Shopping', image: 'https://via.placeholder.com/60'},
-  {id: '3', name: 'Travel', image: 'https://via.placeholder.com/60'},
-  {id: '4', name: 'Entertainment', image: 'https://via.placeholder.com/60'},
-  {id: '5', name: 'Education', image: 'https://via.placeholder.com/60'},
-  {id: '6', name: 'Health', image: 'https://via.placeholder.com/60'},
-  {id: '7', name: 'Technology', image: 'https://via.placeholder.com/60'},
-  {id: '8', name: 'Sports', image: 'https://via.placeholder.com/60'},
-  {id: '9', name: 'Finance', image: 'https://via.placeholder.com/60'},
+export const categoryData = [
+  {
+    id: '1',
+    name: 'Water and drinks',
+    image: 'https://images.unsplash.com/photo-1546793665-c74683f339c1',
+  },
+  {
+    id: '2',
+    name: 'Bars and restaurants',
+    image: 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9',
+  },
+  {
+    id: '3',
+    name: 'Fish and frozen foods',
+    image:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeBTatywvmHTKyGzjGJTVsV42TgaLPkMsnqQ&s',
+  },
+  {
+    id: '4',
+    name: 'Butchers and delicatessens',
+    image:
+      'https://c8.alamy.com/comp/2AJTK84/inside-view-of-rome-store-lantica-salumeria-grocery-store-butcher-shop-deli-at-piazza-della-rotonda-rome-italy-2AJTK84.jpg',
+  },
+  {
+    id: '5',
+    name: 'Gas and household appliances',
+    image:
+      'https://img.canarymedia.com/content/uploads/electric-cooking-1-1.jpg?auto=compress%2Cformat&crop=focalpoint&fit=crop&fp-x=0.5&fp-y=0.5&h=501&q=80&w=864&s=c26f751f4aa3d1edfa4ea927042c2e97',
+  },
+  {
+    id: '6',
+    name: 'IT and consumables',
+    image:
+      'https://5.imimg.com/data5/WL/UH/GLADMIN-27124426/it-hardware-and-consumables.png',
+  },
+  {
+    id: '7',
+    name: 'Telephony and accessories',
+    image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9',
+  },
+  {
+    id: '8',
+    name: 'Automobiles and parts',
+    image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70',
+  },
+  {
+    id: '9',
+    name: 'Ready-to-wear and accessories',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/ClothingReadyWear.jpg/640px-ClothingReadyWear.jpg',
+  },
+  {
+    id: '10',
+    name: 'Hardware and cement',
+    image:
+      'https://thumbs.dreamstime.com/b/cement-department-construction-materials-store-19803392.jpg',
+  },
+  {
+    id: '11',
+    name: 'Cafeteria and pastries',
+    image:
+      'https://hips.hearstapps.com/hmg-prod/images/man-dispensing-cakes-in-a-pastry-bakery-royalty-free-image-1676319170.jpg',
+  },
+  {
+    id: '12',
+    name: 'Beauty, cosmetics and care',
+    image: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702',
+  },
+  {
+    id: '13',
+    name: 'Fashion and jewelry',
+    image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853',
+  },
+  {
+    id: '14',
+    name: 'General living and nutrition',
+    image:
+      'https://domf5oio6qrcr.cloudfront.net/medialibrary/13503/bigstock-Health-food-selection-super-foods-fruits-veggies.jpg',
+  },
+  {
+    id: '15',
+    name: 'Fruits and vegetables',
+    image:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbnL5g_oquV-oRvYkWogl-VyBO2ya3VCkRUA&s',
+  },
 ];
 
 const CategoryItem = ({item}) => (
@@ -48,9 +107,7 @@ const CategoryItem = ({item}) => (
     <View style={styles.imageContainer}>
       <Image source={{uri: item.image}} style={styles.image} />
     </View>
-    <Text numberOfLines={1} ellipsizeMode="tail" style={styles.categoryName}>
-      {item.name}
-    </Text>
+    <Text style={styles.categoryName}>{item.name}</Text>
   </TouchableOpacity>
 );
 
@@ -58,21 +115,15 @@ const Categories = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading delay
-    setTimeout(() => setIsLoading(false), 2000);
+    setTimeout(() => setIsLoading(false), 500);
   }, []);
 
-  const renderItem = ({item, index}) => (
-    <View>
-      <CategoryItem item={item} index={index} />
-      {(index + 1) % 3 === 0 && <View style={styles.rowGap} />}
-    </View>
-  );
+  const renderItem = ({item}) => <CategoryItem item={item} />;
 
   if (isLoading) {
     return (
       <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#4585ef" />
       </View>
     );
   }
@@ -83,22 +134,23 @@ const Categories = () => {
         data={categoryData}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        numColumns={3}
+        numColumns={numColumns}
         showsVerticalScrollIndicator={false}
+        columnWrapperStyle={styles.row}
       />
     </View>
   );
 };
 
-export default Categories;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    marginTop: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 20,
+  },
+  row: {
+    flex: 1,
+    justifyContent: 'space-between',
+    marginBottom: itemSpacing,
   },
   loaderContainer: {
     flex: 1,
@@ -107,13 +159,11 @@ const styles = StyleSheet.create({
   },
   categoryItem: {
     alignItems: 'center',
-    marginHorizontal: 5,
-    marginBottom: 10,
   },
   imageContainer: {
     width: 80,
     height: 80,
-    borderRadius: 50,
+    borderRadius: 40,
     overflow: 'hidden',
     marginBottom: 5,
   },
@@ -127,8 +177,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#262626',
     width: '100%',
-  },
-  rowGap: {
-    height: 15,
+    minHeight: 30,
   },
 });
+
+export default Categories;

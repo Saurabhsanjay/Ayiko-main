@@ -59,7 +59,7 @@ const CustomerNavigation = ({navigation, route}) => {
   const customerData = useAppSelector(
     (state: RootState) => state.auth.customerData,
   );
-
+  console.log(customerData, 'cdata');
   const totalQuantity = useAppSelector(state => state.cart.items);
   console.log('total', totalQuantity.length);
 
@@ -68,19 +68,20 @@ const CustomerNavigation = ({navigation, route}) => {
       initialRouteName={'Home'}
       screenOptions={{
         headerStyle: {
-          backgroundColor: colors.primary,
+          backgroundColor: 'white',
         },
-        headerTintColor: 'white',
+        headerTintColor: 'black',
         headerShadowVisible: false,
         headerTitleAlign: 'center',
-        headerTitleStyle: styles.headerTitleStyle,
+        headerTitleStyle: styles.headerTitleStyless,
         headerBackTitleVisible: false,
         headerRight: () => (
-          <View>
+          <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
+            <Icon name="globe" size={30} color="#2a96ec" />
             <TouchableOpacity
               style={styles.cartButton}
               onPress={() => navigation.navigate('Stepper')}>
-              <Icon name="cart" size={24} color="white" />
+              <Icon name="cart" size={30} color="#2a96ec" />
               {totalQuantity?.length > 0 ? (
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>
@@ -103,15 +104,15 @@ const CustomerNavigation = ({navigation, route}) => {
           title: '',
 
           headerTitle: () => (
-            <Text style={styles.headerTitleStyle}>SEARCH</Text>
+            <Text style={styles.headerTitleStyless}>SEARCH</Text>
           ),
-          headerRight: () => (
-            <View>
-              <TouchableOpacity onPress={() => navigation.navigate('Stepper')}>
-                <Icon name="cart" size={24} color="white" />
-              </TouchableOpacity>
-            </View>
-          ),
+          // headerRight: () => (
+          //   <View>
+          //     <TouchableOpacity onPress={() => navigation.navigate('Stepper')}>
+          //       <Icon name="cart" size={24} color="white" />
+          //     </TouchableOpacity>
+          //   </View>
+          // ),
         })}
       />
       <Stack.Screen
@@ -121,17 +122,17 @@ const CustomerNavigation = ({navigation, route}) => {
           title: '',
 
           headerTitle: () => (
-            <Text style={styles.headerTitleStyle}>
+            <Text style={styles.headerTitleStyless}>
               EDIT PROFILE INFORMATION
             </Text>
           ),
-          headerRight: () => (
-            <View>
-              <TouchableOpacity onPress={() => navigation.navigate('Stepper')}>
-                <Icon name="cart" size={24} color="white" />
-              </TouchableOpacity>
-            </View>
-          ),
+          // headerRight: () => (
+          //   <View>
+          //     <TouchableOpacity onPress={() => navigation.navigate('Stepper')}>
+          //       <Icon name="cart" size={24} color="white" />
+          //     </TouchableOpacity>
+          //   </View>
+          // ),
         })}
       />
       <Stack.Screen
@@ -141,30 +142,17 @@ const CustomerNavigation = ({navigation, route}) => {
           title: '',
 
           headerTitle: () => (
-            <Text style={styles.headerTitleStyle}>
+            <Text style={styles.headerTitleStyless}>
               {route.params.supplierName}
             </Text>
           ),
-          headerRight: () => (
-            <View>
-              <TouchableOpacity
-                style={styles.cartButton}
-                onPress={() => navigation.navigate('Stepper')}>
-                <Icon name="cart" size={24} color="white" />
-                {totalQuantity?.length > 0 ? (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>
-                      {totalQuantity?.length || 0}
-                    </Text>
-                  </View>
-                ) : (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{0}</Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            </View>
-          ),
+          // headerRight: () => (
+          //   <View>
+          //     <TouchableOpacity onPress={() => navigation.navigate('Stepper')}>
+          //       <Icon name="cart" size={24} color="white" />
+          //     </TouchableOpacity>
+          //   </View>
+          // ),
         })}
       />
       <Stack.Screen
@@ -173,7 +161,9 @@ const CustomerNavigation = ({navigation, route}) => {
         options={({navigation}) => ({
           headerShown: false,
           title: '',
-          headerTitle: () => <Text style={styles.headerTitleStyle}>CART</Text>,
+          headerTitle: () => (
+            <Text style={styles.headerTitleStyless}>CART</Text>
+          ),
         })}
       />
       <Stack.Screen
@@ -182,7 +172,9 @@ const CustomerNavigation = ({navigation, route}) => {
         options={({navigation}) => ({
           headerShown: false,
           title: '',
-          headerTitle: () => <Text style={styles.headerTitleStyle}>CART</Text>,
+          headerTitle: () => (
+            <Text style={styles.headerTitleStyless}>CART</Text>
+          ),
         })}
       />
       <Stack.Screen
@@ -191,7 +183,9 @@ const CustomerNavigation = ({navigation, route}) => {
         options={({navigation}) => ({
           headerShown: false,
           title: '',
-          headerTitle: () => <Text style={styles.headerTitleStyle}>CART</Text>,
+          headerTitle: () => (
+            <Text style={styles.headerTitleStyless}>CART</Text>
+          ),
         })}
       />
       <Stack.Screen
@@ -200,7 +194,9 @@ const CustomerNavigation = ({navigation, route}) => {
         options={({navigation}) => ({
           headerShown: false,
           title: '',
-          headerTitle: () => <Text style={styles.headerTitleStyle}>CART</Text>,
+          headerTitle: () => (
+            <Text style={styles.headerTitleStyless}>CART</Text>
+          ),
         })}
       />
       <Stack.Screen
@@ -209,26 +205,7 @@ const CustomerNavigation = ({navigation, route}) => {
         options={({navigation}) => ({
           title: '',
 
-          headerRight: () => (
-            <View>
-              <TouchableOpacity
-                style={styles.cartButton}
-                onPress={() => navigation.navigate('Stepper')}>
-                <Icon name="cart" size={24} color="white" />
-                {totalQuantity?.length > 0 ? (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>
-                      {totalQuantity?.length || 0}
-                    </Text>
-                  </View>
-                ) : (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{0}</Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            </View>
-          ),
+          
         })}
       />
       <Stack.Screen
@@ -238,10 +215,25 @@ const CustomerNavigation = ({navigation, route}) => {
           title: '',
           headerLeft: () => (
             <View style={styles.headerLeft}>
-              <SVGWaveIcon />
-              <Text style={styles.headerTitleStyle}>
-                Hello {customerData?.fullName}
-              </Text>
+              <Image
+                source={{
+                  uri:
+                    customerData?.profileImage?.imageUrl ||
+                    'https://via.placeholder.com/150',
+                }}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
+                  marginRight: 5,
+                }}
+              />
+              <View style={{display: 'flex', flexDirection: 'column'}}>
+                <Text style={styles.headerTitleStyles}>Hello, </Text>
+                <Text style={{fontWeight: 'bold', color: 'black'}}>
+                  Let's Shop!
+                </Text>
+              </View>
             </View>
           ),
           // headerRight: () => (
@@ -312,7 +304,7 @@ const CustomerNavigation = ({navigation, route}) => {
           // eslint-disable-next-line react/no-unstable-nested-components
           headerTitle: () => (
             <View>
-              <Text style={[styles.headerTitleStyle]}>Addresses</Text>
+              <Text style={[styles.headerTitleStyless]}>Addresses</Text>
             </View>
           ),
           headerRight: () => {
@@ -343,7 +335,7 @@ const CustomerNavigation = ({navigation, route}) => {
           // eslint-disable-next-line react/no-unstable-nested-components
           headerTitle: () => (
             <View>
-              <Text style={[styles.headerTitleStyle]}>Manage Address</Text>
+              <Text style={[styles.headerTitleStyless]}>Manage Address</Text>
             </View>
           ),
           headerRight: () => {
@@ -363,7 +355,7 @@ const CustomerNavigation = ({navigation, route}) => {
           // eslint-disable-next-line react/no-unstable-nested-components
           headerTitle: () => (
             <View>
-              <Text style={[styles.headerTitleStyle]}>OrderDetail</Text>
+              <Text style={[styles.headerTitleStyless]}>OrderDetail</Text>
             </View>
           ),
           tabBarStyle: {
@@ -384,10 +376,12 @@ export default CustomerNavigation;
 
 const Styles = ({colors, fonts, insets}: any) =>
   StyleSheet.create({
-    headerTitleStyle: {
-      ...fonts.title,
-      color: colors.white,
+    headerTitleStyles: {
+      color: 'black',
+      display: 'flex',
+      flexDirection: 'column',
     },
+    headerTitleStyless: {fontWeight: 'bold', fontSize: 16, color: 'black'},
     tabBarStyle: {
       height: Platform.OS === 'ios' ? insets.bottom + 60 : insets.bottom + 70,
       backgroundColor: colors.white,

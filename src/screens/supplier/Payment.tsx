@@ -166,12 +166,12 @@ const Payment = ({onNext, order}) => {
         <TouchableOpacity
           onPress={() => setModalVisible(true)}
           style={[styles.button, styles.approveButton]}>
-          <Text style={styles.buttonText}>Approve</Text>
+          <Text style={styles.buttonText}>Approve Payment</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setModalVisibleReject(true)}
           style={[styles.button, styles.rejectButton]}>
-          <Text style={styles.buttonText}>Reject</Text>
+          <Text style={styles.buttonText}>Reject Payment</Text>
         </TouchableOpacity>
       </View>
       <DynamicModal
